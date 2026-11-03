@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,33 +14,31 @@
 
 body{
     margin:0;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:Arial, sans-serif;
     background:#F8E7EC;
 }
 
 header{
-    background:#E6C4CC;
-    color:#444;
     text-align:center;
-    padding:40px 20px;
+    background:#E6C4CC;
+    padding:40px;
 }
 
 header h1{
     margin:0;
-    font-size:3rem;
+    color:#444;
 }
 
 header p{
-    margin-top:15px;
-    font-size:1.2rem;
+    color:#444;
 }
 
 .products{
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    gap:40px;
-    padding:50px 20px;
+    gap:30px;
+    padding:40px 20px;
 }
 
 .card{
@@ -49,27 +46,14 @@ header p{
     width:320px;
     border-radius:20px;
     overflow:hidden;
-    box-shadow:0 5px 20px rgba(0,0,0,.08);
-    transition:transform .2s ease;
+    box-shadow:0 4px 15px rgba(0,0,0,.1);
 }
 
-.card:hover{
-    transform:translateY(-5px);
-}
-
-.image-container{
-    height:280px;
-    background:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:15px;
-}
-
-.image-container img{
+.card img{
     width:100%;
-    height:100%;
+    height:280px;
     object-fit:contain;
+    background:white;
 }
 
 .card-content{
@@ -80,112 +64,278 @@ header p{
 .card h3{
     margin:0;
     color:#444;
-    font-size:2rem;
 }
 
 .price{
-    margin:20px 0;
-    font-size:2.2rem;
-    color:#444;
+    font-size:30px;
+    margin:15px 0;
 }
 
 .btn{
-    display:inline-block;
-    text-decoration:none;
+    border:none;
     background:#D6A5A4;
     color:white;
-    padding:14px 30px;
-    border-radius:12px;
+    padding:12px 25px;
+    border-radius:10px;
+    cursor:pointer;
     font-weight:bold;
-    transition:.2s;
 }
 
 .btn:hover{
     opacity:.9;
 }
 
-@media(max-width:768px){
+.cart{
+    background:white;
+    max-width:800px;
+    margin:20px auto 50px;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 4px 15px rgba(0,0,0,.1);
+}
 
-    header h1{
-        font-size:2.2rem;
-    }
+.cart h2{
+    margin-top:0;
+}
 
-    .card{
-        width:100%;
-        max-width:360px;
-    }
+.cart-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #eee;
+    padding:10px 0;
+}
 
+.remove{
+    background:#e57373;
+    color:white;
+    border:none;
+    border-radius:6px;
+    padding:6px 10px;
+    cursor:pointer;
+}
+
+.total{
+    margin-top:20px;
+    font-size:24px;
+    font-weight:bold;
+}
+
+.whatsapp-btn{
+    margin-top:20px;
+    display:inline-block;
+    background:#25D366;
+    color:white;
+    text-decoration:none;
+    padding:15px 25px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.empty{
+    color:#888;
 }
 
 </style>
-
 </head>
 
 <body>
 
 <header>
-
     <h1>Concept by Lily 💖</h1>
-
-    <p>
-        Skincare, maquillaje y accesorios
-    </p>
-
+    <p>Skincare, maquillaje y accesorios</p>
 </header>
 
 <section class="products">
 
     <div class="card">
 
-        <div class="image-container">
-            <img src="left-on-red.jpeg" alt="ELF Left on Red">
-        </div>
+        <img src="left-on-red.jpeg">
 
         <div class="card-content">
-
             <h3>E.L.F. Left on Red</h3>
+            <div class="price">$13</div>
 
-            <div class="price">
-                $13
-            </div>
-
-            <a
-            class="btn"
-            href="https://wa.me/50587984118?text=Hola,%20me%20interesa%20el%20producto%20E.L.F.%20Left%20on%20Red."
-            target="_blank">
-            Comprar
-            </a>
-
+            <button
+                class="btn"
+                onclick="addToCart('E.L.F. Left on Red',13)"
+            >
+                Añadir al carrito
+            </button>
         </div>
 
     </div>
 
     <div class="card">
 
-        <div class="image-container">
-            <img src="pink-positive.jpeg" alt="ELF Pink Positive">
-        </div>
+        <img src="pink-positive.jpeg">
 
         <div class="card-content">
-
             <h3>E.L.F. Pink Positive</h3>
+            <div class="price">$13</div>
 
-            <div class="price">
-                $13
-            </div>
-
-            <a
-            class="btn"
-            href="https://wa.me/50587984118?text=Hola,%20me%20interesa%20el%20producto%20E.L.F.%20Pink%20Positive."
-            target="_blank">
-            Comprar
-            </a>
-
+            <button
+                class="btn"
+                onclick="addToCart('E.L.F. Pink Positive',13)"
+            >
+                Añadir al carrito
+            </button>
         </div>
 
     </div>
 
 </section>
+
+<section class="cart">
+
+    <h2>🛒 Carrito</h2>
+
+    <div id="cartItems">
+        <p class="empty">No hay productos en el carrito.</p>
+    </div>
+
+    <div id="total" class="total">
+        Total: $0
+    </div>
+
+    <a
+        id="whatsappBtn"
+        class="whatsapp-btn"
+        href="#"
+        onclick="sendWhatsApp()"
+    >
+        Enviar pedido por WhatsApp
+    </a>
+
+</section>
+
+<script>
+
+let cart = {};
+
+function addToCart(name, price){
+
+    if(cart[name]){
+        cart[name].quantity++;
+    }else{
+        cart[name] = {
+            price: price,
+            quantity: 1
+        };
+    }
+
+    renderCart();
+}
+
+function removeFromCart(name){
+
+    if(cart[name].quantity > 1){
+        cart[name].quantity--;
+    }else{
+        delete cart[name];
+    }
+
+    renderCart();
+}
+
+function renderCart(){
+
+    let container =
+        document.getElementById("cartItems");
+
+    let total = 0;
+
+    container.innerHTML = "";
+
+    const keys = Object.keys(cart);
+
+    if(keys.length === 0){
+
+        container.innerHTML =
+        '<p class="empty">No hay productos en el carrito.</p>';
+
+        document.getElementById("total")
+        .innerText = "Total: $0";
+
+        return;
+    }
+
+    keys.forEach(product=>{
+
+        let item = cart[product];
+
+        let subtotal =
+            item.quantity * item.price;
+
+        total += subtotal;
+
+        container.innerHTML += `
+        <div class="cart-item">
+            <div>
+                <strong>${product}</strong>
+                <br>
+                Cantidad: ${item.quantity}
+                <br>
+                Subtotal: $${subtotal}
+            </div>
+
+            <button
+                class="remove"
+                onclick="removeFromCart('${product}')"
+            >
+                Eliminar
+            </button>
+        </div>
+        `;
+    });
+
+    document.getElementById("total")
+    .innerText = `Total: $${total}`;
+}
+
+function sendWhatsApp(){
+
+    const keys = Object.keys(cart);
+
+    if(keys.length === 0){
+
+        alert(
+        "Agrega productos al carrito primero."
+        );
+
+        return false;
+    }
+
+    let total = 0;
+
+    let message =
+    "Hola 💖%0A%0AQuiero realizar el siguiente pedido:%0A%0A";
+
+    keys.forEach(product=>{
+
+        const item = cart[product];
+
+        const subtotal =
+        item.price * item.quantity;
+
+        total += subtotal;
+
+        message +=
+        `✅ ${product} x${item.quantity} ($${subtotal})%0A`;
+    });
+
+    message +=
+    `%0A💰 Total del pedido: $${total}`;
+
+    window.open(
+    `https://wa.me/50587984118?text=${message}`,
+    "_blank"
+    );
+
+    return false;
+}
+
+</script>
 
 </body>
 </html>
