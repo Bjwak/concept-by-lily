@@ -6,55 +6,72 @@
 <title>Concept by Lily</title>
 
 <style>
+
 body{
-    font-family: Arial, sans-serif;
     margin:0;
+    font-family:Arial, sans-serif;
     background:#F8E7EC;
-    color:#444;
 }
 
 header{
     background:#E6C4CC;
     text-align:center;
     padding:30px;
-}
-
-h1{
-    margin:0;
+    color:#444;
 }
 
 .products{
     display:flex;
     justify-content:center;
-    gap:20px;
     flex-wrap:wrap;
+    gap:30px;
     padding:40px;
 }
 
 .card{
+    width:300px;
     background:white;
     border-radius:15px;
-    padding:20px;
-    width:250px;
+    overflow:hidden;
+    box-shadow:0 4px 15px rgba(0,0,0,.1);
     text-align:center;
-    box-shadow:0 2px 10px rgba(0,0,0,.1);
 }
 
-button{
+.card img{
+    width:100%;
+    display:block;
+}
+
+.card h3{
+    margin-top:20px;
+    color:#444;
+}
+
+.price{
+    font-size:24px;
+    margin:15px 0;
+    color:#444;
+}
+
+.btn{
+    display:inline-block;
+    margin-bottom:25px;
+    padding:12px 24px;
+    border-radius:10px;
     background:#D6A5A4;
     color:white;
-    border:none;
-    padding:10px 20px;
-    border-radius:10px;
-    cursor:pointer;
+    text-decoration:none;
+    font-weight:bold;
 }
 
-button:hover{
+.btn:hover{
     opacity:.9;
 }
+
 </style>
 
 </head>
+
 <body>
 
 <header>
@@ -62,51 +79,41 @@ button:hover{
     <p>Skincare, maquillaje y accesorios</p>
 </header>
 
-<div class="products">
+<section class="products">
 
-<div class="card">
+    <div class="card">
 
-    <img src="left-on-red.jpeg"
-         alt="Left on Red"
-         style="width:100%; border-radius:10px;">
+        <img src="left-on-red.jpeg" alt="Left on Red">
 
-    <h3>E.L.F. Left on Red</h3>
+        <h3>E.L.F. Left on Red</h3>
 
-    <p>$13</p>
+        <div class="price">$13</div>
 
-    <a href="https://wa.me/50587984118?text=Hola%20💖,%20me%20interesa%20la%20E.L.F.%20Tinta%20Left%20on%20Red." target="_blank">
-        <button>Comprar</button>
-    </a>
-
-</div>
-
-        <a href="https://wa.me/50587984118?text=Hola%20💖,%20me%20interesa%20el%20Producto%20Left." target="_blank">
-            <button>Comprar</button>
+        <a class="btn"
+           href="https://wa.me/50587984118?text=Hola%20💖,%20me%20interesa%20la%20E.L.F.%20Left%20on%20Red."
+           target="_blank">
+           Comprar
         </a>
+
     </div>
 
-<div class="card">
+    <div class="card">
 
-    <img src="pink-positive.jpeg"
-         alt="Pink Positive"
-         style="width:100%; border-radius:10px;">
+        <img src="pink-positive.jpeg" alt="Pink Positive">
 
-    <h3>E.L.F. Pink Positive</h3>
+        <h3>E.L.F. Pink Positive</h3>
 
-    <p>$13</p>
+        <div class="price">$13</div>
 
-    <a href="https://wa.me/50587984118?text=Hola%20💖,%20me%20interesa%20la%20E.L.F.%20Tinta%20Pink%20Positive." target="_blank">
-        <button>Comprar</button>
-    </a>
-
-</div>
-
-        <a href="https://wa.me/50587984118?text=Hola%20💖,%20me%20interesa%20el%20Producto%20Right." target="_blank">
-            <button>Comprar</button>
+        <a class="btn"
+           href="https://wa.me/50587984118?text=Hola%20💖,%20me%20interesa%20la%20E.L.F.%20Pink%20Positive."
+           target="_blank">
+           Comprar
         </a>
+
     </div>
 
-</div>
+</section>
 
 </body>
 </html>
