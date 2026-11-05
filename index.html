@@ -565,12 +565,9 @@ overflow:auto;
 <br>
 
 <button class="btn" onclick="shareInvoice()">
-📲 Compartir Pedido
+💖 Enviar Pedido
 </button>
 
-<button class="btn" onclick="openWhatsApp()">
-📲 Abrir WhatsApp
-</button>
 
 <button class="remove" onclick="closeInvoice()">
 Cerrar
@@ -686,10 +683,17 @@ function generateInvoice(){
         <h2 style="text-align:center;">
         Concept by Lily 💖
         </h2>
-
-        <p style="text-align:center;">
-        Proforma de Pedido
+        <p style="
+        text-align:center;
+        font-size:18px;
+        margin:5px 0;
+        ">
+        📱 WhatsApp: +505 8798 4118
         </p>
+
+<p style="text-align:center;">
+Proforma de Pedido
+</p>
 
         <hr>
     `;
@@ -744,19 +748,9 @@ function closeInvoice(){
     "invoiceModal"
     ).style.display = "none";
 }
-function openWhatsApp(){
 
-    const message =
-    "Hola 💖, adjunto la proforma de mi pedido.";
 
-    window.open(
-        `https://wa.me/50587984118?text=${encodeURIComponent(message)}`,
-        "_blank"
-    );
-}
-
-    
-async function shareInvoice(){
+ async function shareInvoice(){
 
     try{
 
@@ -782,27 +776,17 @@ async function shareInvoice(){
             ){
 
                 await navigator.share({
+                    files:[file],
                     title:"Pedido Concept by Lily",
-                    text:"Mi pedido",
-                    files:[file]
+                    text:"Hola 💖, me gustaría realizar este pedido."
                 });
 
             }else{
 
-                const link =
-                document.createElement("a");
-
-                link.download =
-                "Pedido-Concept-by-Lily.png";
-
-                link.href =
-                canvas.toDataURL();
-
-                link.click();
-
                 alert(
-                "Tu dispositivo no admite compartir archivos automáticamente. Se descargó la imagen."
+                "Tu dispositivo no admite compartir imágenes."
                 );
+
             }
 
         });
@@ -812,7 +796,7 @@ async function shareInvoice(){
         console.error(error);
 
         alert(
-        "No fue posible compartir la imagen."
+        "No fue posible compartir el pedido."
         );
 
     }
