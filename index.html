@@ -169,8 +169,8 @@ overflow:auto;
 
 <br>
 
-<button class="btn" onclick="downloadInvoice()">
-📥 Descargar Pedido
+<button class="btn" onclick="shareInvoice()">
+📲 Compartir Pedido
 </button>
 
 <button class="btn" onclick="openWhatsApp()">
@@ -747,34 +747,76 @@ function closeInvoice(){
 function openWhatsApp(){
 
     const message =
-    "Hola 💖, me gustaría realizar el pedido mostrado en la proforma.";
+    "Hola 💖, adjunto la proforma de mi pedido.";
 
     window.open(
-    `https://wa.me/50587984118?text=${encodeURIComponent(message)}`,
-    "_blank"
+        `https://wa.me/50587984118?text=${encodeURIComponent(message)}`,
+        "_blank"
     );
 }
 
-function downloadInvoice(){
+    
+async function shareInvoice(){
 
-    html2canvas(
-    document.getElementById("invoiceArea")
-    )
-    .then(canvas=>{
+    try{
 
-        const link =
-        document.createElement("a");
+        const canvas = await html2canvas(
+            document.getElementById("invoiceArea")
+        );
 
-        link.download =
-        "Pedido-Concept-By-Lily.png";
+        canvas.toBlob(async (blob) => {
 
-        link.href =
-        canvas.toDataURL();
+            const file = new File(
+                [blob],
+                "Pedido-Concept-by-Lily.png",
+                {
+                    type:"image/png"
+                }
+            );
 
-        link.click();
-    });
+            if(
+                navigator.canShare &&
+                navigator.canShare({
+                    files:[file]
+                })
+            ){
+
+                await navigator.share({
+                    title:"Pedido Concept by Lily",
+                    text:"Mi pedido",
+                    files:[file]
+                });
+
+            }else{
+
+                const link =
+                document.createElement("a");
+
+                link.download =
+                "Pedido-Concept-by-Lily.png";
+
+                link.href =
+                canvas.toDataURL();
+
+                link.click();
+
+                alert(
+                "Tu dispositivo no admite compartir archivos automáticamente. Se descargó la imagen."
+                );
+            }
+
+        });
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+        "No fue posible compartir la imagen."
+        );
+
+    }
 }
-
 </script>
 
 </body>
