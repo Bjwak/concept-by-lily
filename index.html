@@ -147,7 +147,8 @@ header p{
 </header>
 
 <section class="products">
-
+<!-- Add lipstick only ####################################################### -->
+    
     <!-- Left on Red -->
     
     <div class="card">
@@ -156,7 +157,7 @@ header p{
 
         <div class="card-content">
             <h3>E.L.F. Left on Red</h3>
-            <div class="price">C$430</div>
+            <div class="price">C$ 430</div>
 
             <button
                 class="btn"
@@ -176,7 +177,7 @@ header p{
 
         <div class="card-content">
             <h3>E.L.F. Plum up</h3>
-            <div class="price">C$430</div>
+            <div class="price">C$ 430</div>
 
             <button
                 class="btn"
@@ -196,7 +197,7 @@ header p{
 
         <div class="card-content">
             <h3>E.L.F. Pink Positive</h3>
-            <div class="price">C$430</div>
+            <div class="price">C$ 430</div>
 
             <button
                 class="btn"
@@ -217,7 +218,7 @@ header p{
 
         <div class="card-content">
             <h3>E.L.F. Burgundid</h3>
-            <div class="price">C$430</div>
+            <div class="price">C$ 430</div>
 
             <button
                 class="btn"
@@ -229,6 +230,27 @@ header p{
 
     </div>
 
+<!-- Add Masks only ####################################################### -->
+
+            <!-- Talk that taupe -->
+    
+    <div class="card">
+
+        <img src="talk-that-taupe.jpg">
+
+        <div class="card-content">
+            <h3>Glow Reviver Plumping Lin Oil - Talk that taupe</h3>
+            <div class="price">C$ 430</div>
+
+            <button
+                class="btn"
+                onclick="addToCart('E.L.F.Burgundid',430)"
+            >
+                Añadir al carrito
+            </button>
+        </div>
+
+    </div>
 
 </section>
 
@@ -241,7 +263,7 @@ header p{
     </div>
 
     <div id="total" class="total">
-        Total: $0
+        Total: C$ 0
     </div>
 
     <a
@@ -301,7 +323,7 @@ function renderCart(){
         '<p class="empty">No hay productos en el carrito.</p>';
 
         document.getElementById("total")
-        .innerText = "Total: $0";
+        .innerText = "Total: C$ 0";
 
         return;
     }
@@ -322,7 +344,7 @@ function renderCart(){
                 <br>
                 Cantidad: ${item.quantity}
                 <br>
-                Subtotal: $${subtotal}
+                Subtotal: C$ ${subtotal}
             </div>
 
             <button
@@ -336,7 +358,7 @@ function renderCart(){
     });
 
     document.getElementById("total")
-    .innerText = `Total: $${total}`;
+    .innerText = `Total: C$ ${total}`;
 }
 
 function sendWhatsApp(){
@@ -367,11 +389,11 @@ function sendWhatsApp(){
         total += subtotal;
 
         message +=
-        `✅ ${product} x${item.quantity} ($${subtotal})%0A`;
+        `✅ ${product} x${item.quantity} (C$ ${subtotal})%0A`;
     });
 
     message +=
-    `%0A💰 Total del pedido: $${total}`;
+    `%0A💰 Total del pedido: C$ ${total}`;
 
     window.open(
     `https://wa.me/50587984118?text=${message}`,
