@@ -11,7 +11,52 @@
 *{
     box-sizing:border-box;
 }
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
+<div id="invoiceModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:white;
+padding:20px;
+border-radius:20px;
+max-width:500px;
+width:95%;
+max-height:90vh;
+overflow:auto;
+">
+
+<div id="invoiceArea"></div>
+
+<br>
+
+<button class="btn" onclick="downloadInvoice()">
+📥 Descargar Pedido
+</button>
+
+<button class="btn" onclick="openWhatsApp()">
+📲 Abrir WhatsApp
+</button>
+
+<button
+class="remove"
+onclick="closeInvoice()">
+Cerrar
+</button>
+
+</div>
+</div>
+    
 body{
     margin:0;
     font-family:Arial, sans-serif;
@@ -522,21 +567,22 @@ header p{
         Total: C$ 0
     </div>
 
-    <a
-        id="whatsappBtn"
-        class="whatsapp-btn"
-        href="#"
-        onclick="sendWhatsApp()"
-    >
-        Enviar pedido por WhatsApp
-    </a>
+<button
+    id="whatsappBtn"
+    class="whatsapp-btn"
+    onclick="generateInvoice()"
+>
+    Finalizar pedido
+</button>
+
 
 </section>
 
 <script>
 
 let cart = {};
-
+let lastInvoiceImage = null;
+    
 function addToCart(name, price){
 
     if(cart[name]){
@@ -617,43 +663,116 @@ function renderCart(){
     .innerText = `Total: C$ ${total}`;
 }
 
-function sendWhatsApp(){
+function generateInvoice(){
 
     const keys = Object.keys(cart);
 
     if(keys.length === 0){
 
-        alert(
-        "Agrega productos al carrito primero."
-        );
-
-        return false;
+        alert("Agrega productos al carrito primero.");
+        return;
     }
 
     let total = 0;
 
- let message =
-`Hola 💖
+    let html = `
+    <div style="
+    background:white;
+    padding:20px;
+    color:#444;
+    font-family:Arial;
+    ">
 
-Quiero realizar el siguiente pedido:
+        <h2 style="text-align:center;">
+        Concept by Lily 💖
+        </h2>
 
-`;
+        <p style="text-align:center;">
+        Proforma de Pedido
+        </p>
 
-keys.forEach(product => {
-    const item = cart[product];
+        <hr>
+    `;
 
-    message +=
-    `✅ ${product} x${item.quantity}\n`;
-});
+    keys.forEach(product=>{
 
-message += `\n💰 Total del pedido: C$ ${total}`;
+        const item = cart[product];
 
-window.open(
+        const subtotal =
+        item.price * item.quantity;
+
+        total += subtotal;
+
+        html += `
+        <p>
+        ✅ ${product}
+        <br>
+        Cantidad: ${item.quantity}
+        <br>
+        Subtotal: C$ ${subtotal}
+        </p>
+        `;
+    });
+
+    html += `
+        <hr>
+
+        <h2>
+        Total: C$ ${total}
+        </h2>
+
+        <p>
+        Gracias por elegir
+        Concept by Lily 💖
+        </p>
+
+    </div>
+    `;
+
+    document.getElementById(
+    "invoiceArea"
+    ).innerHTML = html;
+
+    document.getElementById(
+    "invoiceModal"
+    ).style.display = "flex";
+}
+
+function closeInvoice(){
+
+    document.getElementById(
+    "invoiceModal"
+    ).style.display = "none";
+}
+function openWhatsApp(){
+
+    const message =
+    "Hola 💖, me gustaría realizar el pedido mostrado en la proforma.";
+
+    window.open(
     `https://wa.me/50587984118?text=${encodeURIComponent(message)}`,
     "_blank"
-);
+    );
+}
 
-    return false;
+function downloadInvoice(){
+
+    html2canvas(
+    document.getElementById("invoiceArea")
+    )
+    .then(canvas=>{
+
+        const link =
+        document.createElement("a");
+
+        link.download =
+        "Pedido-Concept-By-Lily.png";
+
+        link.href =
+        canvas.toDataURL();
+
+        link.click();
+    });
 }
 
 </script>
