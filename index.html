@@ -632,29 +632,26 @@ function sendWhatsApp(){
 
     let total = 0;
 
-    let message =
-    "Hola 💖%0A%0AQuiero realizar el siguiente pedido:%0A%0A";
+ let message =
+`Hola 💖
 
-    keys.forEach(product=>{
+Quiero realizar el siguiente pedido:
 
-        const item = cart[product];
+`;
 
-        const subtotal =
-        item.price * item.quantity;
-
-        total += subtotal;
-
-        message +=
-        `✅ ${product} x${item.quantity} (C$ ${subtotal})%0A`;
-    });
+keys.forEach(product => {
+    const item = cart[product];
 
     message +=
-    `%0A💰 Total del pedido: C$ ${total}`;
+    `✅ ${product} x${item.quantity}\n`;
+});
 
-    window.open(
-    `https://wa.me/50587984118?text=${message}`,
+message += `\n💰 Total del pedido: C$ ${total}`;
+
+window.open(
+    `https://wa.me/50587984118?text=${encodeURIComponent(message)}`,
     "_blank"
-    );
+);
 
     return false;
 }
