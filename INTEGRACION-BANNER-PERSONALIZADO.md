@@ -1,12 +1,9 @@
-# Integración de banner personalizado
+# Integración de banners personalizados
 
-Admin guarda la ruta del banner en `store_settings.settings.banner_path` (JSONB), por `store_id`.
+Beta ahora lee `store_settings.settings.banner_path` para la tienda definida en `window.CATALOG_CONFIG.storeId`.
 
-- Bucket: `product-images`
-- Ruta: `library/store-banners/<store_id>/<archivo>`
-- El catálogo carga `store_settings` y aplica el banner con `getPublicUrl()`.
-- Si no hay `banner_path`, conserva el banner estático.
+- Si `banner_path` contiene una ruta, obtiene su URL pública desde el bucket `product-images` y reemplaza la imagen del encabezado.
+- Si `banner_path` está vacío o no existe, conserva el banner estático definido en cada HTML (`mujer/banner-accesorios.png`, `hombre/banner-masculino.png` o `cosmeticos/banner-cosmeticos.png`).
+- No requiere cambios SQL ni modifica la lógica de productos, variantes, imágenes de producto, colores, carrito o proformas.
 
-No se necesita otra columna: `store_settings.settings` ya es JSONB. La política `concept_library_upload_staff` permite al personal autorizado cargar archivos dentro de `library`.
-
-El catálogo público está en `Bjwak/concept-by-lily`, rama `main`.
+Para probar, publica Beta y abre cada catálogo. Admin debe tener guardada la configuración de banner para esa tienda. Si se usa "Usar banner predeterminado" en Admin, Beta volverá a mostrar el recurso estático al recargar.

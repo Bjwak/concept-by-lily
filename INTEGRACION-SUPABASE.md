@@ -1,28 +1,51 @@
-# Integración Admin → Catálogos → Supabase
+# Concept by Lily: catálogos conectados a Supabase
 
-- Admin: `Bjwak/concept-by-lily-admin`, rama `main`.
-- Catálogos: `Bjwak/concept-by-lily`, rama `main`.
-- Supabase de producción: `ftzfsxcnfcqdmwhpardt`.
+## Qué cambió
+- Los catálogos de Mujer, Cosméticos y Hombre usan un único motor compartido: `js/catalogo.js`.
+- Los productos y categorías se leen desde Supabase. No hay que mantener arreglos de productos en HTML.
+- Los filtros de categoría se generan desde `categories`.
+- Las variantes se leen desde `product_variants`; sus atributos se presentan como botones.
+- El atributo `Color` se presenta como muestras circulares usando `product_colors.hex_code`.
+- La imagen se selecciona según variante, color o imagen principal, usando `product_images`.
+- La disponibilidad se calcula con el stock de la variante seleccionada.
+- El carrito prepara una proforma y conserva el flujo de compartir/descargar.
 
-Ambas aplicaciones utilizan el mismo proyecto Supabase. El catálogo utiliza la clave publicable; nunca incluir `service_role` ni secretos en el navegador.
-
-## Tiendas
+## Tiendas configuradas
 - Mujer: `937fc539-9b4f-4f8f-a0d6-676408a5359a`
 - Cosméticos: `a6ebf309-4a7e-4a9a-9411-fa956e4d4349`
 - Hombre: `8c109c37-c8ed-4726-b950-24a453ba999b`
 
-## Datos y funciones
-El motor compartido `js/catalogo.js` consulta tiendas, categorías, productos, variantes, colores, imágenes, `store_settings` y las tablas de pedidos usadas por checkout y seguimiento. Cada catálogo define su `storeId` en `window.CATALOG_CONFIG`.
+## Requisitos de Supabase
+- Se usa la clave pública `sb_publishable_...` del proyecto ya configurado en el administrador. Nunca colocar `service_role` en el navegador.
+- Las políticas RLS deben permitir SELECT público únicamente de tiendas/categorías/productos/variantes/colores/imágenes activos.
+- El bucket `product-images` debe seguir siendo público para que `getPublicUrl()` pueda mostrar imágenes.
+- Los productos inactivos no se muestran. Las variantes inactivas no se ofrecen. Los productos activos sin stock se muestran como agotados.
+- Para que una variante aparezca, debe existir como registro activo en `product_variants`. El inventario mostrado es el stock guardado en esa variante.
 
-Admin guarda la configuración en `store_settings.settings` (JSONB) por `store_id`: marca, WhatsApp, redes sociales, visibilidad de precios/stock/descripciones, colores, moneda y banner.
+## Probar localmente
+Desde la carpeta raíz del proyecto, ejecuta en PowerShell:
+```powershell
+npx.cmd --yes http-server -p 5500
+```
+Abre `http://localhost:5500`. También puedes probar directamente:
+- `http://localhost:5500/mujer/`
+- `http://localhost:5500/cosmeticos/`
+- `http://localhost:5500/hombre/`
 
-Los banners personalizados se guardan en `product-images/library/store-banners/<store_id>/<archivo>`. Si no hay `banner_path`, se conserva el banner estático.
+No abras los HTML con `file://`: los módulos JavaScript necesitan un servidor local.
 
-## Seguridad
-- La clave publicable puede estar en el frontend.
-- Nunca exponer `service_role`, contraseñas o secretos.
-- RLS debe limitar la lectura pública a datos que corresponda publicar.
-- Las escrituras administrativas requieren autenticación y políticas de roles.
-- El bucket `product-images` debe ser público para lectura de imágenes; las escrituras deben seguir protegidas.
+## Estado inicial tras la limpieza
+La base de datos quedó sin productos de prueba. Por eso los tres catálogos deben mostrar el mensaje de colección en preparación hasta que registres productos reales desde el administrador y los marques activos. Esta es la conducta esperada, no un error.
 
-El proyecto Supabase Staging es exclusivo para desarrollo y pruebas. El catálogo público de producción debe seguir conectado al proyecto `ftzfsxcnfcqdmwhpardt`.
+## Límites actuales
+- El carrito genera una proforma local; no crea órdenes en la base de datos ni descuenta inventario.
+- Los cambios en el administrador aparecen al volver a cargar el catálogo. No se ha añadido sincronización en tiempo real.
+- No se modificó el proyecto del administrador ni el esquema de Supabase.
+
+
+## Vista rápida de productos (17-11-2026)
+- Las tarjetas del catálogo ya no muestran la descripción larga ni los selectores de variantes.
+- Al pulsar la tarjeta se abre una ventana modal animada con descripción completa, campos adicionales, variantes, disponibilidad y precio.
+- La misma implementación se comparte en los catálogos de Cosméticos, Mujer y Hombre.
+- En móvil la ventana pasa a una presentación vertical y permite desplazamiento.
+- Los campos adicionales se leen desde `products.details` (JSONB). Ejecutar primero la migración incluida en el ZIP del administrador.

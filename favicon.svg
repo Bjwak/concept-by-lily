@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-<rect width="128" height="128" rx="24" fill="#f7dce4"/>
-<circle cx="64" cy="64" r="54" fill="#fff7f8" stroke="#bd7b91" stroke-width="4"/>
-<path d="M64 27c-20 7-24 27 0 42 24-15 20-35 0-42Z" fill="none" stroke="#9b536d" stroke-width="4" stroke-linecap="round"/>
-<path d="M64 69c-18-17-32-7-28 7 4 13 23 15 28 5 5 10 24 8 28-5 4-14-10-24-28-7Z" fill="none" stroke="#9b536d" stroke-width="4" stroke-linejoin="round"/>
-<text x="64" y="103" text-anchor="middle" font-family="Georgia,serif" font-size="24" font-style="italic" fill="#71394e">L</text>
-</svg>
