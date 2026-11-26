@@ -16,6 +16,11 @@ let homepageSettings = null;
 
 const HOME_DEFAULTS = {
   template: "three",
+  logo_image_path: null,
+  logo_position: "center",
+  logo_size: "medium",
+  logo_mode: "with_name",
+  logo_show_tagline: true,
   visible_store_ids: Object.keys(STORE_LINKS),
   sections: { navigation: true, hero: true, collections: true, new_arrivals: true, closing: true, footer: true },
   texts: {
@@ -76,6 +81,26 @@ function applyHomepageSettings() {
     if (node) node.textContent = value ?? "";
   };
   setText("#header-tagline", texts.header_tagline);
+  const siteHeader = document.querySelector(".site-header");
+  const brand = document.querySelector(".site-header .brand");
+  const brandLogo = document.getElementById("brand-logo-image");
+  const brandMark = document.querySelector(".site-header .brand-mark");
+  const brandName = document.querySelector(".site-header .brand-name");
+  const logoPath = config.logo_image_path || "";
+  const logoUrl = logoPath ? imageUrl(logoPath) : "";
+  const logoPosition = ["left", "center", "right"].includes(config.logo_position) ? config.logo_position : "center";
+  const logoSize = ["small", "medium", "large"].includes(config.logo_size) ? config.logo_size : "medium";
+  if (siteHeader) { siteHeader.dataset.logoPosition = logoPosition; siteHeader.dataset.logoSize = logoSize; }
+  if (brandLogo) {
+    if (logoUrl) { brandLogo.src = logoUrl; brandLogo.hidden = false; }
+    else { brandLogo.removeAttribute("src"); brandLogo.hidden = true; }
+  }
+  const imageOnly = Boolean(logoUrl && config.logo_mode === "image_only");
+  if (brandMark) brandMark.hidden = Boolean(logoUrl);
+  if (brandName) brandName.hidden = imageOnly;
+  if (brand) brand.classList.toggle("has-custom-logo", Boolean(logoUrl));
+  const tagline = document.getElementById("header-tagline");
+  if (tagline) tagline.hidden = config.logo_show_tagline === false;
   const eyebrow = document.querySelector("#hero-eyebrow");
   if (eyebrow) {
     const decorative = eyebrow.querySelector(":scope > span");
