@@ -2,7 +2,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const supabase=createClient("https://ftzfsxcnfcqdmwhpardt.supabase.co","sb_publishable_eRUu-PSs6VrdbtHMET1AvQ_pkZ_WHUv");
 const cfg=window.CATALOG_CONFIG,$=id=>document.getElementById(id);
 let products=[],categories=[],activeCategory="all",cart=new Map(),selection=new Map(),quickViewProductId=null,quickViewImageIndex=0,quickViewHistoryOpen=false;
-let catalogSettings={brand_name:"Concept by Lily",whatsapp_number:"+505 8798 4118",show_prices:true,show_stock:true,show_out_of_stock:true,show_descriptions:true,accent_color:"",page_color:"",currency_code:"NIO"};
+let catalogSettings={brand_name:"Concept by Lily",whatsapp_number:"+505 8798 4118",show_prices:true,show_stock:true,show_out_of_stock:true,show_descriptions:true,accent_color:"",page_color:"",currency_code:"NIO",banner_path:null,banner_enabled:false,background_path:null,background_enabled:false,background_overlay:35};
 const cartStorageKey=()=> "concept-by-lily:cart:"+String(cfg.storeId||"default");
 function saveCartDraft(){
  try{
@@ -119,13 +119,32 @@ function currencyOf(p){return catalogSettings.currency_code||p.currency||"NIO"}
 function applyCatalogSettings(){
  if(/^#[0-9a-f]{6}$/i.test(catalogSettings.accent_color||""))document.documentElement.style.setProperty("--accent",catalogSettings.accent_color);
  if(/^#[0-9a-f]{6}$/i.test(catalogSettings.page_color||""))document.documentElement.style.setProperty("--page",catalogSettings.page_color);
- // Solo se muestran portadas cargadas desde el administrador en Supabase Storage.
  const header=document.querySelector(".site-header");
  const bannerPath=typeof catalogSettings.banner_path==="string"?catalogSettings.banner_path.trim():"";
  const bannerUrl=bannerPath?url(bannerPath):"";
+ const bannerEnabled=typeof catalogSettings.banner_enabled==="boolean"?catalogSettings.banner_enabled:Boolean(bannerPath);
+ const backgroundPath=typeof catalogSettings.background_path==="string"?catalogSettings.background_path.trim():"";
+ const backgroundUrl=backgroundPath?url(backgroundPath):"";
+ const backgroundEnabled=typeof catalogSettings.background_enabled==="boolean"?catalogSettings.background_enabled:Boolean(backgroundPath);
+ const overlay=Math.max(0,Math.min(0.85,Number(catalogSettings.background_overlay??35)/100));
  if(header){
-  header.style.backgroundImage=bannerUrl?'linear-gradient(0deg,rgba(40,20,30,.04),rgba(40,20,30,.04)),url("'+bannerUrl+'")':"none";
-  header.setAttribute("aria-label","Portada de colección");
+  header.classList.toggle("has-banner",Boolean(bannerEnabled&&bannerUrl));
+  header.style.backgroundImage=bannerEnabled&&bannerUrl?'linear-gradient(0deg,rgba(40,20,30,.04),rgba(40,20,30,.04)),url("'+bannerUrl+'")':"none";
+  header.style.backgroundColor="var(--accent-soft)";
+  header.setAttribute("aria-label",bannerEnabled&&bannerUrl?"Portada de colección":"Navegación del catálogo");
+ }
+ if(backgroundEnabled&&backgroundUrl){
+  document.body.style.backgroundImage='linear-gradient(rgba(255,255,255,'+overlay+'),rgba(255,255,255,'+overlay+')),url("'+backgroundUrl+'")';
+  document.body.style.backgroundAttachment="fixed";
+  document.body.style.backgroundSize="cover";
+  document.body.style.backgroundPosition="center";
+  document.body.style.backgroundRepeat="no-repeat";
+  document.body.classList.add("has-catalog-background");
+ }else{
+  document.body.style.backgroundImage="none";
+  document.body.style.backgroundColor="var(--page)";
+  document.body.style.backgroundAttachment="";
+  document.body.classList.remove("has-catalog-background");
  }
  renderContactElements();
 }
