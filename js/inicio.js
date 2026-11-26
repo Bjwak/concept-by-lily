@@ -85,6 +85,7 @@ function applyHomepageSettings() {
   const brandMark = document.querySelector(".site-header .brand-mark");
   const brandName = document.querySelector(".site-header .brand-name");
   renderPublicBrandName(brandName, config.brand_name || "Concept by Lily");
+  if (brandMark) brandMark.textContent = config.brand_symbol ?? "✦";
   const logoPath = config.logo_image_path || "";
   const logoUrl = logoPath ? imageUrl(logoPath) : "";
   const logoPosition = ["left", "center", "right"].includes(config.logo_position) ? config.logo_position : "center";
@@ -95,7 +96,7 @@ function applyHomepageSettings() {
     else { brandLogo.removeAttribute("src"); brandLogo.hidden = true; }
   }
   const imageOnly = Boolean(logoUrl && config.logo_mode === "image_only");
-  if (brandMark) brandMark.hidden = Boolean(logoUrl);
+  if (brandMark) brandMark.hidden = imageOnly || !String(config.brand_symbol ?? "✦").trim();
   if (brandName) brandName.hidden = imageOnly;
   if (brand) brand.classList.toggle("has-custom-logo", Boolean(logoUrl));
   const tagline = document.getElementById("header-tagline");
