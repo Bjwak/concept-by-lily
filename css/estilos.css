@@ -1135,3 +1135,6 @@ body{background:var(--home-palette-paper)!important;color:var(--home-palette-ink
 
 /* Avoid flashing legacy hardcoded copy before Supabase settings are applied. */
 body.homepage-config-loading main,body.homepage-config-loading .site-header,body.homepage-config-loading .site-footer{visibility:hidden}
+
+/* Hide the hero frame if its configured image cannot be rendered, instead of showing an empty colored circle. */
+.visual-main.image-load-failed{visibility:hidden}
