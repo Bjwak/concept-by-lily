@@ -756,3 +756,9 @@ body.modal-open{overflow:hidden}
 /* No conservar un banner heredado; el encabezado solo recibe una imagen de fondo del administrador. */
 .site-header{background-image:none;background-color:var(--accent-soft)}
 .site-header .catalog-banner-surface{display:none!important}
+
+/* Banner y fondo se controlan desde Configuración de catálogos */
+.site-header.has-banner{aspect-ratio:2.56/1!important;min-height:180px!important;height:auto!important;overflow:hidden!important;background-position:center center!important;background-size:cover!important;background-repeat:no-repeat!important}
+.site-header:not(.has-banner){aspect-ratio:auto!important;height:62px!important;min-height:62px!important;overflow:visible!important;background-image:none!important;background-color:var(--accent-soft)!important}
+body.has-catalog-background{background-attachment:fixed!important;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
+@media(max-width:600px){.site-header.has-banner{aspect-ratio:2.05/1!important;min-height:140px!important}.site-header:not(.has-banner){height:58px!important;min-height:58px!important}}
