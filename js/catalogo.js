@@ -119,13 +119,20 @@ function currencyOf(p){return catalogSettings.currency_code||p.currency||"NIO"}
 function applyCatalogSettings(){
  if(/^#[0-9a-f]{6}$/i.test(catalogSettings.accent_color||""))document.documentElement.style.setProperty("--accent",catalogSettings.accent_color);
  if(/^#[0-9a-f]{6}$/i.test(catalogSettings.page_color||""))document.documentElement.style.setProperty("--page",catalogSettings.page_color);
- // El banner personalizado se configura por tienda desde Admin. Si no existe,
- // se conserva intacta la imagen estática definida en el HTML como respaldo.
- const banner=document.querySelector(".site-header img");
+ // El arte del catálogo se usa como fondo del hero, no como elemento banner.
+ const header=document.querySelector(".site-header");
+ const banner=header?.querySelector("img");
  const bannerPath=typeof catalogSettings.banner_path==="string"?catalogSettings.banner_path.trim():"";
- if(banner&&bannerPath){
-  const bannerUrl=supabase.storage.from("product-images").getPublicUrl(bannerPath).data?.publicUrl;
-  if(bannerUrl){banner.src=bannerUrl;banner.dataset.customBanner="true";}
+ let bannerUrl=banner?.currentSrc||banner?.src||"";
+ if(bannerPath){
+  const customUrl=supabase.storage.from("product-images").getPublicUrl(bannerPath).data?.publicUrl;
+  if(customUrl)bannerUrl=customUrl;
+ }
+ if(header&&bannerUrl){
+  header.style.backgroundImage='linear-gradient(0deg,rgba(40,20,30,.04),rgba(40,20,30,.04)),url("'+bannerUrl+'")';
+  header.setAttribute("role","img");
+  header.setAttribute("aria-label",banner?.alt||"Portada de colección");
+  if(banner)banner.setAttribute("aria-hidden","true");
  }
  renderContactElements();
 }
