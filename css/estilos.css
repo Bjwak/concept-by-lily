@@ -1008,9 +1008,9 @@ body.homepage-has-background{isolation:isolate;position:relative}
 }
 
 /* Logo de marca configurable desde el administrador de portada */
-.site-header[data-logo-position="left"]{align-items:flex-start;text-align:left}
-.site-header[data-logo-position="center"]{align-items:center;text-align:center}
-.site-header[data-logo-position="right"]{align-items:flex-end;text-align:right}
+.site-header[data-logo-position="left"] .brand,.site-header[data-logo-position="left"] .brand-tagline{align-self:flex-start;text-align:left}
+.site-header[data-logo-position="center"] .brand,.site-header[data-logo-position="center"] .brand-tagline{align-self:center;text-align:center}
+.site-header[data-logo-position="right"] .brand,.site-header[data-logo-position="right"] .brand-tagline{align-self:flex-end;text-align:right}
 .site-header .brand-logo-image{display:block;object-fit:contain;object-position:center;flex:0 0 auto;max-width:100%}
 .site-header .brand-logo-image[hidden]{display:none}
 .site-header[data-logo-size="small"] .brand-logo-image{width:110px;height:42px}
