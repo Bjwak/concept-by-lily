@@ -219,21 +219,24 @@ async function loadNewArrivals() {
       return;
     }
 
-    const [categoriesResult, imagesResult, variantsResult] = await Promise.all([
+    const [categoriesResult, imagesResult, variantsResult] = await Promise.allSettled([
       supabase.from("categories").select("id, name").eq("is_active", true),
       supabase.from("product_images").select("product_id, image_path, is_primary, sort_order, is_active").in("product_id", productIds).eq("is_active", true).order("sort_order"),
       supabase.from("product_variants").select("product_id, stock, is_active").in("product_id", productIds).eq("is_active", true)
     ]);
-
-    for (const result of [categoriesResult, imagesResult, variantsResult]) {
-      if (result.error) throw result.error;
-    }
-
-    const categoryMap = new Map((categoriesResult.data || []).map(category => [category.id, category.name]));
+    const unwrap = (result, label) => {
+      if (result.status === "rejected") { console.warn("No se pudieron cargar " + label + " para novedades:", result.reason); return []; }
+      if (result.value.error) { console.warn("No se pudieron cargar " + label + " para novedades:", result.value.error.message); return []; }
+      return result.value.data || [];
+    };
+    const categories = unwrap(categoriesResult, "categorías");
+    const images = unwrap(imagesResult, "imágenes");
+    const variants = unwrap(variantsResult, "variantes");
+    const categoryMap = new Map(categories.map(category => [category.id, category.name]));
     const cards = visibleProducts.map(product => {
-      const image = (imagesResult.data || []).find(item => item.product_id === product.id && item.is_primary)
-        || (imagesResult.data || []).find(item => item.product_id === product.id);
-      const available = (variantsResult.data || []).some(variant => variant.product_id === product.id && Number(variant.stock) > 0);
+      const image = images.find(item => item.product_id === product.id && item.is_primary)
+        || images.find(item => item.product_id === product.id);
+      const available = variants.some(variant => variant.product_id === product.id && Number(variant.stock) > 0);
       const storeSlug = STORE_LINKS[product.store_id];
       if (!storeSlug) return "";
       const href = `acceso/index.html?tienda=${encodeURIComponent(storeSlug)}`;
