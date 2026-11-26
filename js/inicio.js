@@ -64,13 +64,14 @@ function applyHomepageSettings() {
   const palette = HOME_PALETTES[config.palette_id] || HOME_PALETTES.lily_signature;
   document.documentElement.dataset.homePalette = config.palette_id || 'lily_signature';
   Object.entries(palette).forEach(([key,value]) => document.documentElement.style.setProperty('--home-palette-'+key,value));
+  const footerContrastSafe = (color, background, fallback, minimum = 4.5) => { const luminance = value => { if (!/^#[0-9a-f]{6}$/i.test(value || '')) return 0; const channels = value.slice(1).match(/.{2}/g).map(part => parseInt(part, 16) / 255).map(channel => channel <= 0.04045 ? channel / 12.92 : Math.pow((channel + 0.055) / 1.055, 2.4)); return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]; }; const foreground = luminance(color), backdrop = luminance(background); return /^#[0-9a-f]{6}$/i.test(color || '') && (Math.max(foreground, backdrop) + 0.05) / (Math.min(foreground, backdrop) + 0.05) >= minimum ? color : fallback; };
   const footerMode = config.footer_color_mode === 'custom' ? 'custom' : 'palette';
   const validColor = value => /^#[0-9a-f]{6}$/i.test(value || '');
   const footerColors = footerMode === 'custom' ? {
-    brand: validColor(config.footer_brand_color) ? config.footer_brand_color : palette.deep,
-    text: validColor(config.footer_text_color) ? config.footer_text_color : palette.muted,
-    link: validColor(config.footer_link_color) ? config.footer_link_color : palette.deep,
-    copyright: validColor(config.footer_copyright_color) ? config.footer_copyright_color : palette.accent
+    brand: footerContrastSafe(validColor(config.footer_brand_color) ? config.footer_brand_color : palette.deep, palette.footer, palette.deep),
+    text: footerContrastSafe(validColor(config.footer_text_color) ? config.footer_text_color : palette.ink, palette.footer, palette.ink),
+    link: footerContrastSafe(validColor(config.footer_link_color) ? config.footer_link_color : palette.deep, palette.footer, palette.deep),
+    copyright: footerContrastSafe(validColor(config.footer_copyright_color) ? config.footer_copyright_color : palette.deep, palette.footer, palette.deep)
   } : { brand: palette.deep, text: palette.ink, link: palette.deep, copyright: palette.deep };
   document.documentElement.style.setProperty('--home-footer-brand-color', footerColors.brand);
   document.documentElement.style.setProperty('--home-footer-text-color', footerColors.text);
