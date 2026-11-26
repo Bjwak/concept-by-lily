@@ -90,7 +90,7 @@ function applyHomepageSettings() {
   const logoUrl = logoPath ? imageUrl(logoPath) : "";
   const logoPosition = ["left", "center", "right"].includes(config.logo_position) ? config.logo_position : "center";
   const logoSize = ["small", "medium", "large"].includes(config.logo_size) ? config.logo_size : "medium";
-  if (siteHeader) { siteHeader.dataset.logoPosition = logoPosition; siteHeader.dataset.logoSize = logoSize; }
+  if (siteHeader) { siteHeader.dataset.logoPosition = logoPosition; siteHeader.dataset.logoSize = logoSize; siteHeader.dataset.logoShowTagline = config.logo_show_tagline === false ? "false" : "true"; }
   if (brandLogo) {
     if (logoUrl) { brandLogo.src = logoUrl; brandLogo.hidden = false; }
     else { brandLogo.removeAttribute("src"); brandLogo.hidden = true; }
