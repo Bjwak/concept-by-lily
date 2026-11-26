@@ -169,7 +169,8 @@ function applyHomepageSettings() {
         }
         cardImage.src = url;
         const x = Math.max(0, Math.min(100, Number(cardConfig.image_position_x ?? 50)));
-        const y = Math.max(0, Math.min(100, Number(cardConfig.image_position_y ?? 50)));
+        const defaultY = slug === "mujer" ? 40 : slug === "cosmeticos" ? 42 : 48;
+        const y = Math.max(0, Math.min(100, Number(cardConfig.image_position_y ?? defaultY)));
         const zoom = Math.max(100, Math.min(200, Number(cardConfig.image_zoom ?? 100)));
         cardImage.style.objectPosition = x + "% " + y + "%";
         cardImage.style.transform = "scale(" + (zoom / 100) + ")";
