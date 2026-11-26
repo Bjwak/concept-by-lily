@@ -32,6 +32,9 @@ function renderPublicBrandName(node, value) {
 const HOME_DEFAULTS = {
   // La paleta original se conserva porque palette_id aún no está guardado en Producción.
   palette_id: "lily_signature",
+  section_background_mode: "palette",
+  section_background_hero: "#fffaf5",
+  section_background_content: "#fffaf5",
   visible_store_ids: [],
   sections: {},
   texts: {},
@@ -56,6 +59,12 @@ function applyHomepageSettings() {
   const palette = HOME_PALETTES[config.palette_id] || HOME_PALETTES.lily_signature;
   document.documentElement.dataset.homePalette = config.palette_id || 'lily_signature';
   Object.entries(palette).forEach(([key,value]) => document.documentElement.style.setProperty('--home-palette-'+key,value));
+  const backgroundMode = ["palette","uniform","custom"].includes(config.section_background_mode) ? config.section_background_mode : "palette";
+  const heroBackground = /^#[0-9a-f]{6}$/i.test(config.section_background_hero || "") ? config.section_background_hero : palette.heroStart;
+  const contentBackground = /^#[0-9a-f]{6}$/i.test(config.section_background_content || "") ? config.section_background_content : palette.paper;
+  document.documentElement.dataset.homeBackgroundMode = backgroundMode;
+  document.documentElement.style.setProperty("--home-section-hero-bg", backgroundMode === "custom" ? heroBackground : (backgroundMode === "uniform" ? palette.paper : "linear-gradient(135deg,"+palette.heroStart+","+palette.heroEnd+")"));
+  document.documentElement.style.setProperty("--home-section-content-bg", backgroundMode === "custom" ? contentBackground : palette.paper);
   const texts = config.texts || {};
   const sections = { ...HOME_DEFAULTS.sections, ...(config.sections || {}) };
   const visibleIds = new Set(Array.isArray(config.visible_store_ids) ? config.visible_store_ids : HOME_DEFAULTS.visible_store_ids);
