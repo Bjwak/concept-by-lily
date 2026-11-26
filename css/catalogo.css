@@ -931,3 +931,35 @@ body.has-catalog-background{background-attachment:fixed!important;background-siz
 @media(prefers-reduced-motion:reduce){
  .category-products .product-image{transition:none}
 }
+
+
+/* Botón Volver al inicio: mismo estilo visual de Beta */
+.site-header .back-home{
+ position:absolute!important;
+ z-index:2!important;
+ top:16px!important;
+ left:18px!important;
+ margin:0!important;
+ padding:11px 17px!important;
+ border:1px solid #ffffffa8!important;
+ border-radius:999px!important;
+ background:#fffdf9e8!important;
+ color:#6b4a5a!important;
+ box-shadow:0 6px 22px #57374418!important;
+ backdrop-filter:blur(12px)!important;
+ font:700 12px 'DM Sans',sans-serif!important;
+ text-decoration:none!important;
+ transition:transform .2s,background .2s!important;
+}
+.site-header .back-home:hover{
+ transform:translateY(-2px)!important;
+ background:#fffdf7!important;
+}
+@media(max-width:600px){
+ .site-header .back-home{
+  top:11px!important;
+  left:11px!important;
+  padding:10px 13px!important;
+  font-size:11px!important;
+ }
+}
