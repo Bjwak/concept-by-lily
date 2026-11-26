@@ -752,3 +752,7 @@ body.modal-open{overflow:hidden}
  .site-header{aspect-ratio:2.05/1!important;background-position:center!important}
  .site-header .back-home{top:10px!important;left:10px!important;padding:8px 11px!important;font-size:12px!important}
 }
+
+/* No conservar un banner heredado; el encabezado solo recibe una imagen de fondo del administrador. */
+.site-header{background-image:none;background-color:var(--accent-soft)}
+.site-header .catalog-banner-surface{display:none!important}
