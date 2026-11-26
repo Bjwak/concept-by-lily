@@ -24,8 +24,9 @@ function renderPublicBrandName(node, value) {
   const index = separator.index;
   node.append(document.createTextNode(name.slice(0, index)));
   const em = document.createElement('em');
-  em.textContent = name.slice(index + separator[0].length);
-  node.append(document.createTextNode(' '), em);
+  // Keep the separator word (by) in the rendered brand name.
+  em.textContent = name.slice(index);
+  node.append(em);
 }
 
 const HOME_DEFAULTS = {
