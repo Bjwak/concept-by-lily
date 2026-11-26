@@ -108,9 +108,10 @@ function applyHomepageSettings() {
 
   const heroImage = document.querySelector(".intro-visual .visual-main img");
   if (heroImage) {
-    if (!heroImage.dataset.defaultSrc) heroImage.dataset.defaultSrc = heroImage.getAttribute("src") || "";
     const path = config.hero_image_path || "";
-    heroImage.src = path ? imageUrl(path) : heroImage.dataset.defaultSrc;
+    const source = path ? imageUrl(path) : "";
+    if (source) { heroImage.src = source; heroImage.hidden = false; }
+    else { heroImage.removeAttribute("src"); heroImage.hidden = true; }
   }
 
   const cards = config.cards || {};
@@ -192,9 +193,7 @@ const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({
   "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
 }[char]));
 
-const imageUrl = path => /^https?:/i.test(path || "")
-  ? path
-  : supabase.storage.from("product-images").getPublicUrl(path || "").data?.publicUrl || "";
+const imageUrl = path => { const value = String(path || "").trim(); const prefix = "https://ftzfsxcnfcqdmwhpardt.supabase.co/storage/v1/object/public/product-images/"; if (value.startsWith(prefix)) return value; if (!value || /^https?:/i.test(value)) return ""; return supabase.storage.from("product-images").getPublicUrl(value).data?.publicUrl || ""; };
 
 async function loadNewArrivals() {
   const container = document.getElementById("newProducts");
