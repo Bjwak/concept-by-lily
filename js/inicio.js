@@ -15,18 +15,21 @@ let activeStoreIds = null;
 let homepageSettings = null;
 
 const HOME_PALETTES = {"lily_signature":{"paper":"#fffaf5","ink":"#49343f","muted":"#846f78","accent":"#d78aa5","deep":"#6b4a5a","soft":"#f7dce7","line":"#eadde1","header":"#6b4a5a","footer":"#f7e9ed","cardStart":"#f4c8d8","cardEnd":"#d98aa7","heroStart":"#fffaf5","heroEnd":"#f9eaf0","closing":"#f7e9ed"},"rose_garden":{"paper":"#fff7f8","ink":"#512f40","muted":"#866777","accent":"#d97d9b","deep":"#8d3e60","soft":"#f8dce6","line":"#efd6df","header":"#7b3d59","footer":"#f8e7ed","cardStart":"#f1b7ca","cardEnd":"#c96d8e","heroStart":"#fff7f8","heroEnd":"#f8e0e9","closing":"#f8e7ed"},"sage_cream":{"paper":"#faf8f0","ink":"#35483d","muted":"#7a887c","accent":"#a9bda8","deep":"#526e5c","soft":"#e8eee3","line":"#dfe6d9","header":"#425b4b","footer":"#e8eee3","cardStart":"#c6d5c1","cardEnd":"#718d78","heroStart":"#faf8f0","heroEnd":"#e8eee3","closing":"#e8eee3"},"midnight_lilac":{"paper":"#f7f5f9","ink":"#302b3d","muted":"#777185","accent":"#b9a8d4","deep":"#4e4268","soft":"#e8e0f2","line":"#e0d9ea","header":"#342c45","footer":"#e8e0f2","cardStart":"#c9bce0","cardEnd":"#76658f","heroStart":"#f7f5f9","heroEnd":"#e8e0f2","closing":"#e8e0f2"},"cocoa_blush":{"paper":"#fbf5ef","ink":"#4a332d","muted":"#8c756b","accent":"#c99684","deep":"#745044","soft":"#f0dfd5","line":"#e9d9ce","header":"#65483e","footer":"#f0dfd5","cardStart":"#e4b9a8","cardEnd":"#a87560","heroStart":"#fbf5ef","heroEnd":"#f0dfd5","closing":"#f0dfd5"}};
-function renderPublicBrandName(node, value) {
+function renderPublicBrandName(node, value, config = {}) {
   if (!node) return;
-  const name = String(value ?? '').trim();
-  const separator = name.match(/\s+by\s+/i);
+  const words = String(value ?? '').trim().split(/\s+/).filter(Boolean);
   node.replaceChildren();
-  if (!separator) { node.textContent = name; return; }
-  const index = separator.index;
-  node.append(document.createTextNode(name.slice(0, index)));
-  const em = document.createElement('em');
-  // Keep the separator word (by) in the rendered brand name.
-  em.textContent = name.slice(index);
-  node.append(em);
+  const separated = config.brand_color_mode === 'separated';
+  const colors = Array.isArray(config.brand_word_colors) ? config.brand_word_colors : [];
+  const first = /^#[0-9a-f]{6}$/i.test(config.brand_color_one || '') ? config.brand_color_one : '#ffffff';
+  const second = /^#[0-9a-f]{6}$/i.test(config.brand_color_two || '') ? config.brand_color_two : '#d78aa5';
+  words.forEach((word, index) => {
+    const span = document.createElement('span');
+    span.className = 'brand-word';
+    span.textContent = word;
+    if (separated) span.style.color = Number(colors[index]) === 2 ? second : first;
+    node.append(span, document.createTextNode(index < words.length - 1 ? ' ' : ''));
+  });
 }
 
 const HOME_DEFAULTS = {
@@ -94,8 +97,10 @@ function applyHomepageSettings() {
   const brandLogo = document.getElementById("brand-logo-image");
   const brandMark = document.querySelector(".site-header .brand-mark");
   const brandName = document.querySelector(".site-header .brand-name");
-  renderPublicBrandName(brandName, config.brand_name || "Concept by Lily");
-  if (brandMark) brandMark.textContent = config.brand_symbol ?? "✦";
+  renderPublicBrandName(brandName, config.brand_name || "Concept by Lily", config);
+  if (brandName) brandName.dataset.brandColorMode = config.brand_color_mode === "separated" ? "separated" : "uniform";
+  const markColor = /^#[0-9a-f]{6}$/i.test(config.brand_symbol_color || "") ? config.brand_symbol_color : palette.accent;
+  if (brandMark) { brandMark.textContent = config.brand_symbol ?? "✦"; brandMark.style.color = markColor; }
   const logoPath = config.logo_image_path || "";
   const logoUrl = logoPath ? imageUrl(logoPath) : "";
   const logoPosition = ["left", "center", "right"].includes(config.logo_position) ? config.logo_position : "center";
