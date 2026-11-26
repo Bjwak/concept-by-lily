@@ -952,7 +952,7 @@ main{width:min(1380px,calc(100% - 72px))}
 .collection-card[hidden]{display:none!important}
 
 
-/* Editor de portada: secciones y plantillas administrables desde Admin Beta */
+/* Editor de portada: secciones y plantillas administrables desde el panel de producción */
 [data-home-section][hidden]{display:none!important}
 .intro h1{white-space:pre-line}
 .section-aside{white-space:pre-line}
