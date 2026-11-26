@@ -71,7 +71,7 @@ function applyHomepageSettings() {
     text: validColor(config.footer_text_color) ? config.footer_text_color : palette.muted,
     link: validColor(config.footer_link_color) ? config.footer_link_color : palette.deep,
     copyright: validColor(config.footer_copyright_color) ? config.footer_copyright_color : palette.accent
-  } : { brand: palette.deep, text: palette.muted, link: palette.deep, copyright: palette.accent };
+  } : { brand: palette.deep, text: palette.ink, link: palette.deep, copyright: palette.deep };
   document.documentElement.style.setProperty('--home-footer-brand-color', footerColors.brand);
   document.documentElement.style.setProperty('--home-footer-text-color', footerColors.text);
   document.documentElement.style.setProperty('--home-footer-link-color', footerColors.link);
