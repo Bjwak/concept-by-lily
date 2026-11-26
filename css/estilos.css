@@ -1006,3 +1006,17 @@ body.homepage-has-background{isolation:isolate;position:relative}
  }
  .collection-grid[data-template="three"] .collection-beauty{aspect-ratio:893/850!important}
 }
+
+/* Logo de marca configurable desde el administrador de portada */
+.site-header[data-logo-position="left"]{align-items:flex-start;text-align:left}
+.site-header[data-logo-position="center"]{align-items:center;text-align:center}
+.site-header[data-logo-position="right"]{align-items:flex-end;text-align:right}
+.site-header .brand-logo-image{display:block;object-fit:contain;object-position:center;flex:0 0 auto;max-width:100%}
+.site-header .brand-logo-image[hidden]{display:none}
+.site-header[data-logo-size="small"] .brand-logo-image{width:110px;height:42px}
+.site-header[data-logo-size="medium"] .brand-logo-image{width:170px;height:62px}
+.site-header[data-logo-size="large"] .brand-logo-image{width:230px;height:82px}
+.site-header .brand-mark[hidden],.site-header .brand-name[hidden],.site-header #header-tagline[hidden]{display:none!important}
+.site-header .brand.has-custom-logo{gap:12px}
+.site-header .brand.has-custom-logo .brand-name{white-space:nowrap}
+@media(max-width:600px){.site-header[data-logo-position="left"] .brand-tagline{text-align:left}.site-header[data-logo-position="right"] .brand-tagline{text-align:right}.site-header[data-logo-size="small"] .brand-logo-image{width:92px;height:35px}.site-header[data-logo-size="medium"] .brand-logo-image{width:135px;height:50px}.site-header[data-logo-size="large"] .brand-logo-image{width:175px;height:64px}}
