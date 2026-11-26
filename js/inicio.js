@@ -269,4 +269,17 @@ async function loadNewArrivals() {
   }
 }
 
-Promise.all([loadHomepageSettings(), loadStoreVisibility()]).then(() => { applyHomepageSettings(); return loadNewArrivals(); }).catch(error => { console.error("No se pudo iniciar la portada:", error); loadNewArrivals(); });
+const withHomepageTimeout = (promise, label) => Promise.race([
+  promise,
+  new Promise((_, reject) => setTimeout(() => reject(new Error("Tiempo de espera agotado al cargar " + label)), 10000))
+]);
+Promise.allSettled([
+  withHomepageTimeout(loadHomepageSettings(), "la configuración de portada"),
+  withHomepageTimeout(loadStoreVisibility(), "las tiendas")
+]).then(() => {
+  applyHomepageSettings();
+  return loadNewArrivals();
+}).catch(error => {
+  console.error("No se pudo iniciar la portada:", error);
+  loadNewArrivals();
+});
