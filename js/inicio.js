@@ -64,6 +64,18 @@ function applyHomepageSettings() {
   const palette = HOME_PALETTES[config.palette_id] || HOME_PALETTES.lily_signature;
   document.documentElement.dataset.homePalette = config.palette_id || 'lily_signature';
   Object.entries(palette).forEach(([key,value]) => document.documentElement.style.setProperty('--home-palette-'+key,value));
+  const footerMode = config.footer_color_mode === 'custom' ? 'custom' : 'palette';
+  const validColor = value => /^#[0-9a-f]{6}$/i.test(value || '');
+  const footerColors = footerMode === 'custom' ? {
+    brand: validColor(config.footer_brand_color) ? config.footer_brand_color : palette.deep,
+    text: validColor(config.footer_text_color) ? config.footer_text_color : palette.muted,
+    link: validColor(config.footer_link_color) ? config.footer_link_color : palette.deep,
+    copyright: validColor(config.footer_copyright_color) ? config.footer_copyright_color : palette.accent
+  } : { brand: palette.deep, text: palette.muted, link: palette.deep, copyright: palette.accent };
+  document.documentElement.style.setProperty('--home-footer-brand-color', footerColors.brand);
+  document.documentElement.style.setProperty('--home-footer-text-color', footerColors.text);
+  document.documentElement.style.setProperty('--home-footer-link-color', footerColors.link);
+  document.documentElement.style.setProperty('--home-footer-copyright-color', footerColors.copyright);
   const backgroundMode = ["palette","uniform","custom"].includes(config.section_background_mode) ? config.section_background_mode : "palette";
   const heroBackground = /^#[0-9a-f]{6}$/i.test(config.section_background_hero || "") ? config.section_background_hero : palette.heroStart;
   const contentBackground = /^#[0-9a-f]{6}$/i.test(config.section_background_content || "") ? config.section_background_content : palette.paper;
