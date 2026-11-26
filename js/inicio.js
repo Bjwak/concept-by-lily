@@ -201,7 +201,7 @@ async function loadNewArrivals() {
   if (!container || !message) return;
 
   try {
-    if (activeStoreIds === null) await loadStoreVisibility();
+    // La carga de tiendas se inicia en el bootstrap; si se demora, no bloqueamos las novedades.
     const { data: products, error } = await supabase
       .from("products")
       .select("id, store_id, category_id, name, price, currency, created_at, is_archived")
