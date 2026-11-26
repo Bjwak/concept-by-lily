@@ -1039,3 +1039,14 @@ body.homepage-has-background{isolation:isolate;position:relative}
  .collection-grid[data-template="three"]{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important;grid-template-areas:"left" "right_top" "right_bottom"!important}
  .collection-grid[data-template="three"] .collection-card{aspect-ratio:1.45/1!important}
 }
+
+/* Production hotfix: keep the three-store layout rows from collapsing to zero.
+   The grid has no fixed height, so 1fr tracks collapsed and showed only image slivers. */
+.collection-grid[data-template="three"]{
+  grid-template-rows:clamp(220px,24vw,360px) clamp(220px,24vw,360px)!important;
+}
+@media(max-width:760px){
+  .collection-grid[data-template="three"]{
+    grid-template-rows:auto!important;
+  }
+}
