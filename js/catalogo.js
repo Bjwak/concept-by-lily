@@ -43,7 +43,7 @@ const norm=s=>String(s??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money=(n,c="NIO")=>{try{return new Intl.NumberFormat("es-NI",{style:"currency",currency:c||"NIO"}).format(Number(n||0))}catch{return `C$ ${Number(n||0).toFixed(2)}`}};
 const attrs=v=>v?.attributes&&typeof v.attributes==="object"?v.attributes:{};
-const url=p=>/^https?:/i.test(p||"")?p:supabase.storage.from("product-images").getPublicUrl(p||"").data?.publicUrl||"";
+const url=p=>{const value=String(p||"").trim();const prefix="https://ftzfsxcnfcqdmwhpardt.supabase.co/storage/v1/object/public/product-images/";if(value.startsWith(prefix))return value;if(!value||/^https?:/i.test(value))return "";return supabase.storage.from("product-images").getPublicUrl(value).data?.publicUrl||"";};
 const isColorAttribute=k=>["color","colores"].includes(norm(k));
 // Unifica nombres equivalentes: Color, Colores y variantes con acentos/mayúsculas.
 const canonicalAttribute=k=>{
@@ -119,20 +119,13 @@ function currencyOf(p){return catalogSettings.currency_code||p.currency||"NIO"}
 function applyCatalogSettings(){
  if(/^#[0-9a-f]{6}$/i.test(catalogSettings.accent_color||""))document.documentElement.style.setProperty("--accent",catalogSettings.accent_color);
  if(/^#[0-9a-f]{6}$/i.test(catalogSettings.page_color||""))document.documentElement.style.setProperty("--page",catalogSettings.page_color);
- // El arte del catálogo se usa como fondo del hero, no como elemento banner.
+ // Solo se muestran portadas cargadas desde el administrador en Supabase Storage.
  const header=document.querySelector(".site-header");
- const banner=header?.querySelector("img");
  const bannerPath=typeof catalogSettings.banner_path==="string"?catalogSettings.banner_path.trim():"";
- let bannerUrl=banner?.currentSrc||banner?.src||"";
- if(bannerPath){
-  const customUrl=supabase.storage.from("product-images").getPublicUrl(bannerPath).data?.publicUrl;
-  if(customUrl)bannerUrl=customUrl;
- }
- if(header&&bannerUrl){
-  header.style.backgroundImage='linear-gradient(0deg,rgba(40,20,30,.04),rgba(40,20,30,.04)),url("'+bannerUrl+'")';
-  header.setAttribute("role","img");
-  header.setAttribute("aria-label",banner?.alt||"Portada de colección");
-  if(banner)banner.setAttribute("aria-hidden","true");
+ const bannerUrl=bannerPath?url(bannerPath):"";
+ if(header){
+  header.style.backgroundImage=bannerUrl?'linear-gradient(0deg,rgba(40,20,30,.04),rgba(40,20,30,.04)),url("'+bannerUrl+'")':"none";
+  header.setAttribute("aria-label","Portada de colección");
  }
  renderContactElements();
 }
