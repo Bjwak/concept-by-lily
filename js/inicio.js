@@ -14,8 +14,10 @@ const STORE_LINKS = {
 let activeStoreIds = null;
 let homepageSettings = null;
 
+const HOME_PALETTES = {"lily_signature":{"paper":"#fffaf5","ink":"#49343f","muted":"#846f78","accent":"#d78aa5","deep":"#6b4a5a","soft":"#f7dce7","line":"#eadde1","header":"#6b4a5a","footer":"#f7e9ed","cardStart":"#f4c8d8","cardEnd":"#d98aa7","heroStart":"#fffaf5","heroEnd":"#f9eaf0","closing":"#f7e9ed"},"rose_garden":{"paper":"#fff7f8","ink":"#512f40","muted":"#866777","accent":"#d97d9b","deep":"#8d3e60","soft":"#f8dce6","line":"#efd6df","header":"#7b3d59","footer":"#f8e7ed","cardStart":"#f1b7ca","cardEnd":"#c96d8e","heroStart":"#fff7f8","heroEnd":"#f8e0e9","closing":"#f8e7ed"},"sage_cream":{"paper":"#faf8f0","ink":"#35483d","muted":"#7a887c","accent":"#a9bda8","deep":"#526e5c","soft":"#e8eee3","line":"#dfe6d9","header":"#425b4b","footer":"#e8eee3","cardStart":"#c6d5c1","cardEnd":"#718d78","heroStart":"#faf8f0","heroEnd":"#e8eee3","closing":"#e8eee3"},"midnight_lilac":{"paper":"#f7f5f9","ink":"#302b3d","muted":"#777185","accent":"#b9a8d4","deep":"#4e4268","soft":"#e8e0f2","line":"#e0d9ea","header":"#342c45","footer":"#e8e0f2","cardStart":"#c9bce0","cardEnd":"#76658f","heroStart":"#f7f5f9","heroEnd":"#e8e0f2","closing":"#e8e0f2"},"cocoa_blush":{"paper":"#fbf5ef","ink":"#4a332d","muted":"#8c756b","accent":"#c99684","deep":"#745044","soft":"#f0dfd5","line":"#e9d9ce","header":"#65483e","footer":"#f0dfd5","cardStart":"#e4b9a8","cardEnd":"#a87560","heroStart":"#fbf5ef","heroEnd":"#f0dfd5","closing":"#f0dfd5"}};
 const HOME_DEFAULTS = {
   template: "three",
+  palette_id: "lily_signature",
   logo_image_path: null,
   logo_position: "center",
   logo_size: "medium",
@@ -57,6 +59,9 @@ async function loadHomepageSettings() {
 
 function applyHomepageSettings() {
   const config = homepageSettings || HOME_DEFAULTS;
+  const palette = HOME_PALETTES[config.palette_id] || HOME_PALETTES.lily_signature;
+  document.documentElement.dataset.homePalette = config.palette_id || 'lily_signature';
+  Object.entries(palette).forEach(([key,value]) => document.documentElement.style.setProperty('--home-palette-'+key,value));
   const texts = { ...HOME_DEFAULTS.texts, ...(config.texts || {}) };
   const sections = { ...HOME_DEFAULTS.sections, ...(config.sections || {}) };
   const visibleIds = new Set(Array.isArray(config.visible_store_ids) ? config.visible_store_ids : HOME_DEFAULTS.visible_store_ids);
