@@ -23,10 +23,12 @@ function renderPublicBrandName(node, value, config = {}) {
   const colors = Array.isArray(config.brand_word_colors) ? config.brand_word_colors : [];
   const first = /^#[0-9a-f]{6}$/i.test(config.brand_color_one || '') ? config.brand_color_one : '#ffffff';
   const second = /^#[0-9a-f]{6}$/i.test(config.brand_color_two || '') ? config.brand_color_two : '#d78aa5';
+  const byIndex = words.findIndex(word => word.toLowerCase() === 'by');
   words.forEach((word, index) => {
     const span = document.createElement('span');
     span.className = 'brand-word';
     span.textContent = word;
+    if (byIndex >= 0 && index >= byIndex) span.style.fontStyle = 'italic';
     if (separated) span.style.color = Number(colors[index]) === 2 ? second : first;
     node.append(span, document.createTextNode(index < words.length - 1 ? ' ' : ''));
   });
