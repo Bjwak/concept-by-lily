@@ -1138,3 +1138,9 @@ body.homepage-config-loading main,body.homepage-config-loading .site-header,body
 
 /* Hide the hero frame if its configured image cannot be rendered, instead of showing an empty colored circle. */
 .visual-main.image-load-failed{visibility:hidden}
+
+/* Homepage section backgrounds: match Admin's palette, mode and live preview. */
+.intro,.collections,.new-arrivals{position:relative;isolation:isolate}
+.intro::before,.collections::before,.new-arrivals::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:calc((100% - 100vw)/2);width:100vw;pointer-events:none}
+.intro::before{background:var(--home-section-hero-bg,linear-gradient(135deg,var(--home-palette-heroStart),var(--home-palette-heroEnd)))}
+.collections::before,.new-arrivals::before{background:var(--home-section-content-bg,var(--home-palette-paper))}
