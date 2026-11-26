@@ -8,6 +8,9 @@
   <title>Cosméticos y maquillaje | Concept by Lily</title>
   <style>
     :root{--accent:#bd8292;--accent-dark:#92576a;--accent-soft:#f3e0e5;--page:#fff8fa;}
+    /* Igual que Beta: el botón de regreso permanece visible al desplazarse. */
+    .site-header .back-home{position:fixed!important;top:12px!important;left:16px!important;z-index:1000!important;margin:0!important;}
+    @media(max-width:650px){.site-header .back-home{top:10px!important;left:10px!important;}}
   </style>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script>window.CATALOG_CONFIG={storeId:"a6ebf309-4a7e-4a9a-9411-fa956e4d4349"};</script>
