@@ -155,10 +155,28 @@ function applyHomepageSettings() {
       if (arrow) action.append(arrow);
     }
     if (number && cardConfig.eyebrow) number.textContent = cardConfig.eyebrow;
+    let cardImage = card.querySelector(".collection-card-image");
     if (cardConfig.image_path) {
       const url = imageUrl(cardConfig.image_path);
-      if (url) card.style.setProperty("background-image", 'url("' + url.replace(/"/g, "%22") + '")', "important");
+      if (url) {
+        if (!cardImage) {
+          cardImage = document.createElement("img");
+          cardImage.className = "collection-card-image";
+          cardImage.alt = "";
+          cardImage.setAttribute("aria-hidden", "true");
+          cardImage.draggable = false;
+          card.prepend(cardImage);
+        }
+        cardImage.src = url;
+        const x = Math.max(0, Math.min(100, Number(cardConfig.image_position_x ?? 50)));
+        const y = Math.max(0, Math.min(100, Number(cardConfig.image_position_y ?? 50)));
+        const zoom = Math.max(100, Math.min(200, Number(cardConfig.image_zoom ?? 100)));
+        cardImage.style.objectPosition = x + "% " + y + "%";
+        cardImage.style.transform = "scale(" + (zoom / 100) + ")";
+        card.style.removeProperty("background-image");
+      }
     } else {
+      cardImage?.remove();
       card.style.removeProperty("background-image");
     }
   });
