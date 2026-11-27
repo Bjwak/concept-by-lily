@@ -2,7 +2,7 @@ import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const supabase=createClient("https://ftzfsxcnfcqdmwhpardt.supabase.co","sb_publishable_eRUu-PSs6VrdbtHMET1AvQ_pkZ_WHUv");
 const cfg=window.CATALOG_CONFIG,$=id=>document.getElementById(id);
 let products=[],categories=[],activeCategory="all",cart=new Map(),selection=new Map(),quickViewProductId=null,quickViewImageIndex=0,quickViewHistoryOpen=false;
-let trackingPhone="",trackingOtpSent=false,trackingPhoneVerified=false;
+
 let catalogSettings={brand_name:"Concept by Lily",whatsapp_number:"+505 8798 4118",show_prices:true,show_stock:true,show_out_of_stock:true,show_descriptions:true,accent_color:"",page_color:"",currency_code:"NIO",banner_path:null,banner_enabled:false,background_path:null,background_enabled:false,background_overlay:35};
 const cartStorageKey=()=> "concept-by-lily:cart:"+String(cfg.storeId||"default");
 function saveCartDraft(){
@@ -292,45 +292,29 @@ function normalizeTrackingPhone(value){
 }
 function renderCustomerOrders(rows){
  const box=$("trackOrderResult");
- if(!rows?.length){box.textContent="No encontramos pedidos asociados a este teléfono verificado.";return}
+ if(!rows?.length){box.textContent="No encontramos pedidos asociados a este número telefónico.";return}
  box.innerHTML='<div class="customer-orders-list">'+rows.map(order=>{
   const status=orderStatusLabels[order.status]||order.status;
-  return '<article class="customer-order-status"><div class="customer-order-status-head"><strong>Pedido #'+esc(order.order_number)+'</strong><span class="order-status '+esc(order.status)+'">'+esc(status)+'</span></div><p>'+esc(order.store_name||"Concept by Lily")+'</p><p>Total: '+money(order.total,order.currency)+'</p><time>'+new Date(order.created_at).toLocaleString("es-NI")+'</time></article>';
- }).join("")+'</div><button type="button" class="customer-order-whatsapp" id="trackAnotherPhone">Consultar otro teléfono</button>';
- $("trackAnotherPhone")?.addEventListener("click",async()=>{
-  await supabase.auth.signOut();
-  trackingPhone="";trackingOtpSent=false;trackingPhoneVerified=false;
-  $("trackOrderPhone").value="";$("trackOrderOtp").value="";$("trackOrderOtp").hidden=true;
-  $("trackOrderSubmit").textContent="Enviar código de verificación";$("trackAnotherPhone")?.remove();box.textContent="";
+  return '<article class="customer-order-status"><div class="customer-order-status-head"><strong>Pedido #'+esc(order.order_number)+'</strong><span class="order-status '+esc(order.status)+'">'+esc(status)+'</span></div><p>'+esc(order.store_name||"Concept by Lily")+'</p><time>'+new Date(order.created_at).toLocaleString("es-NI")+'</time></article>';
+ }).join("")+'</div><button type="button" class="customer-order-whatsapp" id="trackAnotherPhone">Consultar otro número</button>';
+ $("trackAnotherPhone")?.addEventListener("click",()=>{
+  $("trackOrderPhone").value="";box.textContent="";$("trackOrderPhone").focus();
  });
 }
 async function trackOrder(){
- const box=$("trackOrderResult"),button=$("trackOrderSubmit"),phone=normalizeTrackingPhone($("trackOrderPhone").value),code=$("trackOrderOtp").value.trim();
- if(!phone){box.textContent="Ingresa un número telefónico válido con código de país. Para Nicaragua, puedes escribir los 8 dígitos locales.";return}
- button.disabled=true;box.textContent="Verificando…";
+ const box=$("trackOrderResult"),button=$("trackOrderSubmit"),phone=normalizeTrackingPhone($("trackOrderPhone").value);
+ if(!phone){box.textContent="Ingresa un número válido. Para Nicaragua, puedes escribir los 8 dígitos locales.";return}
+ button.disabled=true;button.textContent="Consultando…";box.textContent="Buscando pedidos asociados al teléfono…";
  try{
-  if(!trackingOtpSent||trackingPhone!==phone){
-   trackingPhone=phone;trackingOtpSent=false;trackingPhoneVerified=false;
-   const {error}=await supabase.auth.signInWithOtp({phone:trackingPhone});
-   if(error)throw error;
-   trackingOtpSent=true;$("trackOrderOtp").hidden=false;$("trackOrderOtp").focus();
-   button.textContent="Verificar y consultar";
-   box.textContent="Enviamos un código de verificación por SMS al teléfono indicado. Ingresa el código para consultar tus pedidos.";
-   return;
-  }
-  if(!trackingPhoneVerified){
-   if(!/^\d{6}$/.test(code)){box.textContent="Ingresa el código de 6 dígitos que recibiste por SMS.";return}
-   const {error}=await supabase.auth.verifyOtp({phone:trackingPhone,token:code,type:"sms"});
-   if(error)throw error;
-   trackingPhoneVerified=true;
-  }
-  const {data,error}=await supabase.rpc("get_customer_order_statuses");
+  const {data,error}=await supabase.rpc("get_customer_order_statuses_by_phone",{p_phone:phone});
   if(error)throw error;
   renderCustomerOrders(data||[]);
  }catch(err){
-  console.error("No se pudieron consultar los pedidos del teléfono verificado:",err);
-  box.textContent=!trackingOtpSent?"No se pudo enviar el SMS. Revisa que Phone Auth y un proveedor SMS estén configurados en Supabase.": "No fue posible verificar el teléfono o consultar los pedidos. Comprueba el código e inténtalo de nuevo.";
- }finally{button.disabled=false}
+  console.error("No se pudieron consultar los pedidos por teléfono:",err);
+  box.textContent=err?.message||"No fue posible consultar los pedidos. Inténtalo nuevamente.";
+ }finally{
+  button.disabled=false;button.textContent="Consultar pedidos";
+ }
 }
 const orderStatusLabels={pending_confirmation:"Pendiente de confirmación",confirmed:"Confirmado",preparing:"En preparación",ready_for_delivery:"Listo para entregar",in_transit:"En camino",delivered:"Entregado",cancelled_by_customer:"Cancelado por ti",cancelled_by_store:"Cancelado por la tienda",rejected:"Rechazado"};
 const customerCanCancel=status=>["pending_confirmation","confirmed","preparing","ready_for_delivery"].includes(status);
@@ -466,4 +450,4 @@ document.addEventListener("touchmove",e=>{
 const stopSparkleTouch=e=>{for(const touch of e.changedTouches)activeSparkleTouches.delete(touch.identifier)};
 document.addEventListener("touchend",stopSparkleTouch,{passive:true});
 document.addEventListener("touchcancel",stopSparkleTouch,{passive:true});
-$("whatsappBtn").onclick=invoice;$("trackOrderForm")?.addEventListener("submit",e=>{e.preventDefault();trackOrder()});$("trackOrderPhone")?.addEventListener("input",()=>{const normalized=normalizeTrackingPhone($("trackOrderPhone").value);if(trackingOtpSent&&normalized!==trackingPhone){trackingOtpSent=false;trackingPhoneVerified=false;$("trackOrderOtp").hidden=true;$("trackOrderOtp").value="";$("trackOrderSubmit").textContent="Enviar código de verificación";$("trackOrderResult").textContent="El teléfono cambió. Solicita un nuevo código para verificarlo."}});$("closeInvoice").onclick=()=>$("invoiceModal").classList.remove("open");$("shareInvoice").onclick=share;$("invoiceModal").onclick=e=>{if(e.target.id==="invoiceModal")$("invoiceModal").classList.remove("open")};$("productSearch").oninput=renderProducts;$("currentYear").textContent=new Date().getFullYear();load();
+$("whatsappBtn").onclick=invoice;$("trackOrderForm")?.addEventListener("submit",e=>{e.preventDefault();trackOrder()});$("closeInvoice").onclick=()=>$("invoiceModal").classList.remove("open");$("shareInvoice").onclick=share;$("invoiceModal").onclick=e=>{if(e.target.id==="invoiceModal")$("invoiceModal").classList.remove("open")};$("productSearch").oninput=renderProducts;$("currentYear").textContent=new Date().getFullYear();load();
