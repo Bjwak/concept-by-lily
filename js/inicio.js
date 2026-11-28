@@ -206,7 +206,7 @@ function applyHomepageSettings() {
         const defaultY = slug === "mujer" ? 40 : slug === "cosmeticos" ? 42 : 48;
         const y = Math.max(0, Math.min(100, Number(cardConfig.image_position_y ?? defaultY)));
         const zoom = Math.max(100, Math.min(200, Number(cardConfig.image_zoom ?? 100)));
-        cardImage.style.objectPosition = x + "% " + y + "%";
+        cardImage.style.objectPosition = "50% 50%";
         const translateX = (50 - x) * (zoom / 100 - 1);
         const translateY = (50 - y) * (zoom / 100 - 1);
         cardImage.style.transform = "translate(" + translateX.toFixed(2) + "%, " + translateY.toFixed(2) + "%) scale(" + (zoom / 100) + ")";
