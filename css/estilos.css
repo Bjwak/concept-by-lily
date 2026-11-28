@@ -1148,3 +1148,8 @@ body.homepage-config-loading main,body.homepage-config-loading .site-header,body
 /* Public brand word colors are supplied by homepage_settings from Supabase. */
 .site-header .brand-name[data-brand-color-mode="uniform"] .brand-word{color:inherit}
 .site-header .brand-name .brand-word{display:inline}
+
+/* Keep homepage collection cards at a stable 1.42:1 ratio when the grid changes from 3 to 2 or 1 columns. Recommended artwork: 1420x1000 px. */
+.collection-card,.collection-man{aspect-ratio:1.42/1!important}
+@media(max-width:900px){.collection-card,.collection-man{aspect-ratio:1.42/1!important}}
+@media(max-width:600px){.collection-card,.collection-man{aspect-ratio:1.42/1!important}}
