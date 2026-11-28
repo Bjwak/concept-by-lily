@@ -1162,7 +1162,7 @@ body.homepage-config-loading main,body.homepage-config-loading .site-header,body
 .collection-grid[data-template="three"] .collection-beauty{aspect-ratio:893/850!important}
 .collection-grid[data-template="three"] .collection-woman,
 .collection-grid[data-template="three"] .collection-man{aspect-ratio:1.70/1!important}
-.collection-grid[data-template="three"]{aspect-ratio:1.90/1!important;grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important}
+.collection-grid[data-template="three"]{aspect-ratio:1.90/1!important;grid-template-columns:minmax(0,1.235fr) minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important}
 @media(max-width:760px){
  .collection-grid[data-template="one"] .collection-card{aspect-ratio:1.65/1!important}
  .collection-grid[data-template="two"] .collection-card{aspect-ratio:1.42/1!important}
