@@ -1153,3 +1153,21 @@ body.homepage-config-loading main,body.homepage-config-loading .site-header,body
 .collection-card,.collection-man{aspect-ratio:1.42/1!important}
 @media(max-width:900px){.collection-card,.collection-man{aspect-ratio:1.42/1!important}}
 @media(max-width:600px){.collection-card,.collection-man{aspect-ratio:1.42/1!important}}
+
+
+/* Image dimensions are tied to the selected homepage template and card slot.
+   Keep each card ratio stable on desktop and mobile so the recommended artwork fits. */
+.collection-grid[data-template="one"] .collection-card{aspect-ratio:1.65/1!important}
+.collection-grid[data-template="two"] .collection-card{aspect-ratio:1.42/1!important}
+.collection-grid[data-template="three"] .collection-beauty{aspect-ratio:893/850!important}
+.collection-grid[data-template="three"] .collection-woman,
+.collection-grid[data-template="three"] .collection-man{aspect-ratio:1.70/1!important}
+.collection-grid[data-template="three"]{aspect-ratio:1.90/1!important;grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important}
+@media(max-width:760px){
+ .collection-grid[data-template="one"] .collection-card{aspect-ratio:1.65/1!important}
+ .collection-grid[data-template="two"] .collection-card{aspect-ratio:1.42/1!important}
+ .collection-grid[data-template="three"]{aspect-ratio:auto!important;grid-template-rows:auto!important}
+ .collection-grid[data-template="three"] .collection-beauty{aspect-ratio:893/850!important}
+ .collection-grid[data-template="three"] .collection-woman,
+ .collection-grid[data-template="three"] .collection-man{aspect-ratio:1.70/1!important}
+}
